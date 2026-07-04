@@ -448,6 +448,7 @@ body.print-adv .sec{display:none!important}
         <label class="cb-item"><input type="checkbox" id="as-ret"><span>Retirement funds as source (401k/IRA withdrawal or loan)</span></label>
         <label class="cb-item"><input type="checkbox" id="as-sale"><span>Proceeds from sale of existing home</span></label>
         <label class="cb-item"><input type="checkbox" id="as-bus"><span>Business funds — sourcing documentation required</span></label>
+        <label class="cb-item"><input type="checkbox" id="as-cap"><span>Cash value life insurance identified as capital source</span></label>
       </div>
     </div>
     <div class="sbr">
@@ -535,6 +536,26 @@ body.print-adv .sec{display:none!important}
     <textarea class="an" id="cn-ownership" rows="2" placeholder="Optional: vesting decision, estate planning timeline, trust status..."></textarea>
   </div>
 
+  <!-- Homeowners Insurance -->
+  <div class="ac">
+    <div class="ac-hd"><i class="ti ti-shield-check"></i><div><div class="ac-title">Homeowners Insurance</div><div class="ac-sub">Quote and binder secured before the option period — not during it</div></div></div>
+    <div class="info">We don't handle this in-house — we refer to Answer Financial. Getting a quote in place now means this is already solved once the buyer is under contract, instead of something eating into their option period.</div>
+    <div class="f"><label>Homeowners Insurance Conditions — check all confirmed</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="hi-quote"><span>Quote requested from Answer Financial</span></label>
+        <label class="cb-item"><input type="checkbox" id="hi-binder"><span>Binder in hand</span></label>
+        <label class="cb-item"><input type="checkbox" id="hi-prem"><span>Premium confirmed in closing figures</span></label>
+        <label class="cb-item"><input type="checkbox" id="hi-cov"><span>Right coverage confirmed for the property</span></label>
+      </div>
+    </div>
+    <div class="sbr">
+      <button class="sb needs" onclick="ss(this,'homeins','needs')">Needs Work</button>
+      <button class="sb prog" onclick="ss(this,'homeins','prog')">In Progress</button>
+      <button class="sb ready" onclick="ss(this,'homeins','ready')">Ready</button>
+    </div>
+    <textarea class="an" id="cn-homeins" rows="2" placeholder="Optional: property type considerations, coverage notes..."></textarea>
+  </div>
+
   <!-- Competitive Readiness -->
   <div class="ac">
     <div class="ac-hd"><i class="ti ti-trophy"></i><div><div class="ac-title">Competitive Readiness</div><div class="ac-sub">VAL status, Realtor partner, offer strategy</div></div></div>
@@ -619,8 +640,8 @@ body.print-adv .sec{display:none!important}
 <script>
 // ── STATE ──────────────────────────────────────────────────────────────────
 const ST={};
-const W={credit:18,income:15,debt:15,assets:17,align:12,ownership:11,compete:12};
-const CATS=['credit','income','debt','assets','align','ownership','compete'];
+const W={credit:17,income:14,debt:14,assets:16,align:11,ownership:10,homeins:7,compete:11};
+const CATS=['credit','income','debt','assets','align','ownership','homeins','compete'];
 const CM={
   credit:   {label:'Credit Position',        icon:'ti-chart-bar'},
   income:   {label:'Income & Documentation', icon:'ti-file-invoice'},
@@ -628,6 +649,7 @@ const CM={
   assets:   {label:'Assets & Down Payment',  icon:'ti-piggy-bank'},
   align:    {label:'Life Alignment',         icon:'ti-target'},
   ownership:{label:'Ownership Structure',    icon:'ti-building-estate'},
+  homeins:  {label:'Homeowners Insurance',   icon:'ti-shield-check'},
   compete:  {label:'Competitive Readiness',  icon:'ti-trophy'},
 };
 
@@ -650,7 +672,7 @@ const CONDS={
   assets:{mode:'note',items:[
     ['as-seas','Funds seasoned 60+ days'],['as-gift','Gift funds involved'],
     ['as-ret','Retirement funds as source'],['as-sale','Proceeds from home sale'],
-    ['as-bus','Business funds — sourcing required']]},
+    ['as-bus','Business funds — sourcing required'],['as-cap','Cash value life insurance identified as capital source']]},
   align:{mode:'confirm',items:[
     ['al-fin','FIN# established'],['al-inv','Investment contribution protected'],
     ['al-cf','Cash flow after housing acceptable'],['al-eq','Equity concentration discussed'],
@@ -659,6 +681,9 @@ const CONDS={
     ['ow-op','Ownership Protection conversation done'],['ow-vest','Vesting decision made'],
     ['ow-ep','Estate planning partner introduced'],['ow-trust','Trust formation complete'],
     ['ow-eli','Loan product trust-eligible']]},
+  homeins:{mode:'confirm',items:[
+    ['hi-quote','Quote requested from Answer Financial'],['hi-binder','Binder in hand'],
+    ['hi-prem','Premium confirmed in closing figures'],['hi-cov','Right coverage confirmed for property']]},
   compete:{mode:'confirm',items:[
     ['cr-val','VAL submitted'],['cr-vali','VAL issued'],['cr-re','Realtor briefed'],
     ['cr-off','Offer strategy done'],['cr-mkt','Market conditions understood']]},
@@ -818,6 +843,11 @@ function tasks(cat,status,emp,dti,cs,trust){
       prog: [trust?'Confirm trust formation is on schedule — must be complete 8+ weeks before closing':'Finalize vesting decision with advisor',trust?'Verify loan product is trust-eligible with advisor before VAL submission':'Estate planning partner introduction completed or scheduled'],
       ready:[trust?'Trust documents in place — confirm with escrow that title will vest in trust name':'Vesting structure confirmed — notify escrow of title instructions','Ownership Protection conversation complete — buyer understands their structure'],
     },
+    homeins:{
+      needs:['Introduce Answer Financial for a homeowners insurance quote — before you\u2019re under contract, not during the option period','Confirm the quote reflects the actual property type and coverage needs','Set the expectation now: this is solved early so it never becomes a scramble later'],
+      prog: ['Confirm quote request is submitted and awaiting a binder','Review coverage details together before finalizing'],
+      ready:['Binder in hand — confirm premium is reflected in your closing figures','Maintain the policy through closing — no last-minute coverage changes'],
+    },
     compete:{
       needs:['Complete all mortgage readiness milestones — VAL cannot be submitted until ready','Learn the difference between pre-qualification and Verified Approval (VAL)','Engage a Realtor partner for market education and home search strategy','Discuss offer strategy with your advisor and Realtor before you start shopping'],
       prog: ['VAL submission timeline confirmed with advisor','Review offer strategy with Realtor partner for your target market','Confirm Realtor is briefed on your VAL status and what it means for offer strength'],
@@ -837,6 +867,7 @@ function phases(trust,closingDate,tlEst,dti){
     assets:    ST.assets==='ready'?3:ST.assets==='prog'?2:1,
     align:     ST.align==='ready'?3:ST.align==='prog'?2:1,
     ownership: ST.ownership==='ready'?3:(trust?(ST.ownership==='prog'?2:0):2),
+    homeins:   ST.homeins==='ready'?3:2,
     compete:   ST.compete==='ready'?3:2,
   };
   const phDefs=[
@@ -907,6 +938,7 @@ function readyConds(trust,emp){
     'Down payment and closing cost reserves fully sourced, seasoned, and documented',
     'Purchase scenario confirmed — life alignment verified and protecting FIN#',
     trust?'Living trust formed and documented — loan product confirmed trust-eligible':'Title vesting structure confirmed with advisor and escrow',
+    'Homeowners insurance binder in hand — premium confirmed in your closing figures',
     'Verified Approval submitted and issued by underwriting',
     'Realtor partner engaged and briefed on VAL status',
     emp==='self'||emp==='self1'?'Business returns and YTD P&L prepared and verified':'Employment verification and documentation package complete',
@@ -1073,7 +1105,7 @@ function gen(){
   <div class="adv-b">
     <div class="adv-g">
       <div class="adc"><div class="al">VAL Readiness Score</div><div class="av">${sc}%</div><div class="as2">${t.lbl}</div></div>
-      <div class="adc"><div class="al">Categories Ready</div><div class="av">${readyCnt} of 7</div><div class="as2">${CATS.filter(c=>ST[c]==='prog').length} in progress</div></div>
+      <div class="adc"><div class="al">Categories Ready</div><div class="av">${readyCnt} of ${CATS.length}</div><div class="as2">${CATS.filter(c=>ST[c]==='prog').length} in progress</div></div>
       <div class="adc"><div class="al">Highest-Weight Gap</div><div class="av">${critPath.length>0?CM[critPath[0]].label.split(' ')[0]:'None'}</div><div class="as2">${critPath.length>0?W[critPath[0]]+' pts remaining':''}</div></div>
     </div>
     ${trust?`<div class="adv-sec">
