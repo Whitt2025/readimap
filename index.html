@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Buyer Readiness Map — The Inspire Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+/* ── RESET & VARS ── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f1f3d;--nm:#1a3260;--gold:#c9a84c;--glt:#e8c97a;
+  --cream:#f8f6f1;--slate:#e8e4de;--muted:#6b7280;--bdr:rgba(15,31,61,.12);
+  --bg:#fff;--grn:#166534;--grn-bg:rgba(22,101,52,.1);
+  --amb:#b45309;--amb-bg:rgba(180,83,9,.12);
+  --red:#b91c1c;--red-bg:rgba(185,28,28,.1);
+}
+body{font-family:'DM Sans',sans-serif;background:#e8e4de;color:var(--navy);-webkit-font-smoothing:antialiased}
+
+/* ── FORM SHELL ── */
+.wrap{max-width:860px;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--bdr)}
+.brand-icon{width:38px;height:38px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.brand-icon i{color:var(--gold);font-size:18px}
+.brand-name{font-family:'Playfair Display',serif;font-size:15px;color:var(--navy)}
+.brand-sub{font-size:11px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+.priv{font-size:10px;color:var(--muted);background:rgba(15,31,61,.04);border-radius:6px;padding:5px 9px;margin-top:4px;display:inline-block}
+.progress{display:flex;gap:5px;align-items:center;margin-bottom:2rem}
+.pill{flex:1;height:3px;background:var(--bdr);border-radius:2px;transition:background .3s}
+.pill.done{background:var(--navy)}.pill.active{background:var(--gold)}
+.plbl{font-size:12px;color:var(--muted);white-space:nowrap;margin-left:8px}
+.sec{background:var(--bg);border-radius:12px;border:.5px solid var(--bdr);padding:1.5rem;margin-bottom:1rem;display:none}
+.sec.on{display:block}
+.sec-hd{display:flex;gap:12px;align-items:flex-start;margin-bottom:1.25rem}
+.sn{width:30px;height:30px;border-radius:50%;background:var(--navy);color:var(--gold);font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.st{font-family:'Playfair Display',serif;font-size:17px;color:var(--navy);font-weight:400}
+.ss{font-size:12px;color:var(--muted);margin-top:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.f{display:flex;flex-direction:column;gap:5px}
+.f label{font-size:11px;font-weight:500;color:var(--navy);letter-spacing:.04em;text-transform:uppercase}
+.f input,.f select,.f textarea{border:.5px solid var(--bdr);border-radius:8px;padding:9px 11px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--navy);background:var(--cream);outline:none;width:100%;transition:border-color .2s}
+.f input:focus,.f select:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,31,61,.07)}
+.hint{font-size:10px;color:var(--muted);margin-top:2px}.req{color:var(--gold)}
+hr.dv{border:none;border-top:.5px solid var(--bdr);margin:1rem 0}
+.info{background:rgba(15,31,61,.04);border-radius:8px;border-left:3px solid var(--gold);padding:10px 12px;font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.rg{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px}
+.rb{display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:20px;border:.5px solid var(--bdr);cursor:pointer;font-size:12px;color:var(--muted);background:var(--cream);transition:all .2s;user-select:none}
+.rb input{display:none}.rb:has(input:checked){background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* checkboxes */
+.cb-group{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.cb-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer}
+.cb-item input[type=checkbox]{width:14px;height:14px;accent-color:var(--navy);cursor:pointer}
+.cb-item span{color:var(--navy)}
+
+/* toggle */
+.tr{display:flex;align-items:center;justify-content:space-between;background:var(--cream);border-radius:10px;padding:13px 15px;border:.5px solid var(--bdr);margin-bottom:9px}
+.tr-left .trl{font-size:13px;font-weight:500;color:var(--navy)}
+.tr-left .trs{font-size:11px;color:var(--muted);margin-top:2px}
+.tsw{position:relative;width:44px;height:24px;flex-shrink:0}
+.tsw input{opacity:0;width:0;height:0}
+.tsl{position:absolute;cursor:pointer;inset:0;background:#d1cfc9;border-radius:24px;transition:.3s}
+.tsl::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+.tsw input:checked+.tsl{background:var(--gold)}.tsw input:checked+.tsl::before{transform:translateX(20px)}
+
+/* assess card */
+.ac{background:var(--cream);border-radius:10px;padding:14px;border:.5px solid var(--bdr);margin-bottom:10px}
+.ac-hd{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ac-hd i{color:var(--gold);font-size:17px}
+.ac-title{font-size:13px;font-weight:600;color:var(--navy)}
+.ac-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.sbr{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.sb{padding:6px 14px;border-radius:20px;border:.5px solid var(--bdr);cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .2s;background:var(--bg)}
+.sb.needs{color:var(--red)}.sb.needs.sel{background:var(--red-bg);border-color:var(--red)}
+.sb.prog{color:var(--amb)}.sb.prog.sel{background:var(--amb-bg);border-color:var(--amb)}
+.sb.ready{color:var(--grn)}.sb.ready.sel{background:var(--grn-bg);border-color:var(--grn)}
+.an{width:100%;margin-top:10px;border:.5px solid var(--bdr);border-radius:8px;padding:8px 10px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--navy);background:var(--bg);outline:none;resize:none}
+.tflag{background:rgba(201,168,76,.1);border:1px solid var(--gold);border-radius:10px;padding:12px 14px;margin-top:12px;display:none;gap:8px}
+.tflag i{color:var(--gold);font-size:16px;flex-shrink:0;margin-top:2px}
+.tflag .tf-t{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.tflag .tf-b{font-size:11px;color:var(--muted);line-height:1.6}
+.dw{position:relative}.dw::before{content:'$';position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--muted);pointer-events:none}
+.dl{padding-left:22px!important}
+
+/* nav */
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1rem;border-top:.5px solid var(--bdr)}
+.bbk{padding:9px 18px;border-radius:8px;border:.5px solid var(--bdr);background:transparent;font-size:13px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif}
+.bbk:hover{border-color:var(--navy);color:var(--navy)}
+.bnx{padding:9px 24px;border-radius:8px;background:var(--navy);border:none;font-size:13px;font-weight:500;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:7px}
+.bnx:hover{background:var(--nm)}
+.bgen{padding:10px 28px;border-radius:8px;background:var(--gold);border:none;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:7px}
+.bgen:hover{background:var(--glt)}
+.savings-calc{background:rgba(15,31,61,.04);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--muted);margin-top:8px;display:none}
+.savings-calc strong{color:var(--navy)}
+
+/* ── OUTPUT SHELL ── */
+#rep-area{display:none}#adv-area{display:none}
+.rep-acts{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:8px;flex-wrap:wrap}
+.rep-acts-l{display:flex;gap:8px}
+.bpr{padding:9px 18px;border-radius:8px;background:var(--navy);border:none;font-size:12px;font-weight:500;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px}
+.badv{padding:9px 18px;border-radius:8px;background:var(--gold);border:none;font-size:12px;font-weight:600;color:var(--navy);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px}
+.bnw{padding:9px 18px;border-radius:8px;background:transparent;border:.5px solid var(--bdr);font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* ── CLIENT MAP REPORT ── */
+.rpt{background:var(--bg);border-radius:12px;overflow:hidden;border:.5px solid var(--bdr)}
+.rh{background:var(--navy);padding:1.75rem 2rem 1.5rem}
+.rh-lbl{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);font-weight:700;margin-bottom:5px}
+.rh h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:#fff;line-height:1.2;margin-bottom:3px}
+.rh h1 strong{font-weight:600}
+.rh-meta{font-size:10px;color:rgba(255,255,255,.45);margin-bottom:1.25rem}
+
+/* VAL hero */
+.vh{display:grid;grid-template-columns:80px 1fr;gap:16px;align-items:center;background:rgba(255,255,255,.07);border-radius:8px;padding:14px 16px}
+.vring{position:relative;width:80px;height:80px;flex-shrink:0}
+.vring svg{width:80px;height:80px}
+.vc{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.vc .vn{font-size:22px;font-weight:700;color:#fff;line-height:1}
+.vc .vp{font-size:9px;color:var(--gold);font-weight:500}
+.vl{font-family:'Playfair Display',serif;font-size:17px;color:#fff;font-weight:600;margin-bottom:3px}
+.vd{font-size:11px;color:rgba(255,255,255,.55);line-height:1.5;margin-bottom:8px}
+.vpills{display:flex;gap:5px;flex-wrap:wrap}
+.vp-pill{font-size:9px;font-weight:500;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.vp-pill.ok{background:rgba(22,101,52,.35);color:#86efac}
+.vp-pill.wa{background:rgba(180,83,9,.35);color:#fcd34d}
+.vp-pill.no{background:rgba(185,28,28,.3);color:#fca5a5}
+
+/* snap bar */
+.snap-bar{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:10px;border-radius:6px;overflow:hidden}
+.sb-cell{padding:6px 4px;text-align:center}
+.sb-cell .sbl{font-size:7px;text-transform:uppercase;letter-spacing:.04em;color:rgba(255,255,255,.5);margin-bottom:2px}
+.sb-cell .sbv{font-size:9px;font-weight:600;color:#fff}
+
+/* report body */
+.rb2{padding:0 2rem 2rem}
+.rs{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #f0ebe3}
+.rs:first-child{border-top:none;margin-top:1.25rem}
+.rs-tag{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);font-weight:700;margin-bottom:3px}
+.rs-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--navy);font-weight:600;margin-bottom:10px}
+
+/* category grid */
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.cc{background:var(--cream);border-radius:8px;padding:12px;border:.5px solid #e8ddd0}
+.cc.fw{grid-column:1/-1}
+.cc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cc-name{font-size:10px;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:5px}
+.cc-name i{color:var(--gold);font-size:12px}
+.bdg{font-size:9px;font-weight:600;padding:2px 8px;border-radius:10px}
+.bdg.needs{background:var(--red-bg);color:var(--red)}
+.bdg.prog{background:var(--amb-bg);color:var(--amb)}
+.bdg.ready{background:var(--grn-bg);color:var(--grn)}
+.rr2{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.tl{list-style:none;padding:0;margin:0}
+.tl li{font-size:10.5px;color:var(--muted);padding:3px 0;border-bottom:.5px solid #ede8e0;display:flex;align-items:flex-start;gap:6px;line-height:1.45}
+.tl li:last-child{border-bottom:none}
+.tl li i{font-size:10px;flex-shrink:0;margin-top:1px}
+.i-ok{color:var(--grn)}.i-wa{color:var(--amb)}.i-no{color:var(--red)}
+.cn{font-size:10px;color:var(--muted);font-style:italic;margin-top:6px;padding-top:6px;border-top:.5px solid #ede8e0;line-height:1.45}
+.dep{background:rgba(201,168,76,.1);border:1.5px solid var(--gold);border-radius:6px;padding:8px 10px;margin-top:7px;display:flex;gap:7px}
+.dep i{color:var(--gold);font-size:12px;flex-shrink:0;margin-top:1px}
+.dep .dt{font-size:10px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.dep .db{font-size:9.5px;color:var(--muted);line-height:1.45}
+
+/* conditions block (checkbox surfacing) */
+.condwrap{margin-top:6px;padding-top:6px;border-top:.5px solid #ede8e0}
+.condlbl{font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px}
+.condpills{display:flex;flex-wrap:wrap;gap:0}
+
+/* savings gap callout */
+.sgap{background:rgba(180,83,9,.06);border-radius:6px;padding:8px 10px;margin-top:7px;font-size:10px;color:var(--amb);display:flex;gap:6px;align-items:flex-start}
+.sgap i{font-size:11px;flex-shrink:0;margin-top:1px}
+
+/* timeline */
+.tln{margin-bottom:10px}
+.ph-row{margin-bottom:8px}
+.ph-hd{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.ph-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ph-lbl{font-size:9px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.06em}
+.ph-dt{font-size:9px;color:var(--muted);margin-left:auto}
+.ph-tasks{background:var(--cream);border-radius:7px;padding:7px 10px}
+.pt{display:flex;align-items:flex-start;gap:8px;padding:4px 0;border-bottom:.5px solid #ede8e0;font-size:11px;color:var(--muted);line-height:1.45}
+.pt:last-child{border-bottom:none}
+.pt strong{color:var(--navy);font-size:11px}
+.pt-cat{font-size:8px;text-transform:uppercase;letter-spacing:.04em;color:var(--gold);font-weight:700;white-space:nowrap;margin-top:2px;flex-shrink:0;min-width:48px}
+.pt.hd-flag{background:rgba(201,168,76,.1);border-radius:4px;padding:4px 6px;margin:2px -2px}
+.hd-tag{font-size:8px;font-weight:700;color:var(--red);white-space:nowrap;margin-top:2px}
+
+/* checkins */
+.ckg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.ck{background:var(--cream);border-radius:7px;padding:10px;text-align:center;border:.5px solid #e8ddd0}
+.ck .cw{font-size:8px;text-transform:uppercase;letter-spacing:.06em;color:var(--gold);font-weight:700;margin-bottom:3px}
+.ck .cf{font-size:11px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.ck .cd{font-size:9.5px;color:var(--muted);line-height:1.45}
+
+/* ready box */
+.rb3{background:var(--navy);border-radius:8px;padding:14px 16px}
+.rb3 .rt{font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);font-weight:700;margin-bottom:7px}
+.rb3 ul{list-style:none;padding:0;margin:0}
+.rb3 ul li{font-size:11px;color:rgba(255,255,255,.75);padding:4px 0;border-bottom:.5px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;gap:7px;line-height:1.45}
+.rb3 ul li:last-child{border-bottom:none}
+.rb3 ul li i{color:var(--gold);font-size:11px;flex-shrink:0;margin-top:1px}
+
+/* footer */
+.rf{background:var(--cream);border-radius:8px;padding:11px 14px;margin-top:1.25rem;font-size:10px;color:var(--muted);line-height:1.7;border-left:3px solid var(--gold)}
+.rft{font-size:8px;color:var(--muted);text-align:center;margin-top:10px;text-transform:uppercase;letter-spacing:.05em}
+
+/* ── ADVISOR SUMMARY ── */
+.adv{background:var(--bg);border-radius:12px;overflow:hidden;border:2px solid var(--gold);margin-top:1rem}
+.adv-h{background:var(--gold);padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
+.adv-h h2{font-family:'Playfair Display',serif;font-size:15px;color:var(--navy);font-weight:600}
+.adv-h .at{font-size:9px;font-weight:700;color:rgba(15,31,61,.55);text-transform:uppercase;letter-spacing:.06em}
+.adv-b{padding:1.25rem 1.5rem}
+.adv-g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.adc{background:var(--cream);border-radius:8px;padding:12px;border:.5px solid #e8ddd0}
+.adc .al{font-size:8px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px}
+.adc .av{font-size:20px;font-weight:700;color:var(--navy)}
+.adc .as2{font-size:9px;color:var(--muted);margin-top:2px}
+.adv-sec{margin-bottom:12px}
+.adv-st{font-size:9px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
+.ai{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--muted);padding:5px 0;border-bottom:.5px solid #f0ebe3;line-height:1.5}
+.ai:last-child{border-bottom:none}
+.ai strong{color:var(--navy)}
+.ai .ap{font-size:8px;font-weight:700;padding:2px 6px;border-radius:7px;flex-shrink:0;margin-top:2px}
+.hi{background:var(--red-bg);color:var(--red)}
+.mi{background:var(--amb-bg);color:var(--amb)}
+.li{background:var(--grn-bg);color:var(--grn)}
+.adv-ft{font-size:8px;color:var(--muted);text-align:center;padding:9px;border-top:.5px solid var(--bdr);text-transform:uppercase;letter-spacing:.05em}
+
+/* ── PRINT ── */
+@media print{
+  @page{size:letter portrait;margin:.45in .5in .45in .5in}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{background:#fff!important}
+  .wrap{padding:0!important;max-width:100%!important}
+  .brand{display:none!important}
+  .progress{display:none!important}
+  .sec{display:none!important}
+  .rep-acts{display:none!important}
+  #adv-area{display:none!important}
+  #rep-area{display:block!important}
+  .rpt{border:none!important;border-radius:0!important}
+  .rh{background:#0f1f3d!important;padding:1rem 1.25rem!important;border-radius:0!important}
+  .rb2{padding:0 1.25rem .75rem!important}
+  .rs{margin-top:.9rem!important;padding-top:.9rem!important}
+  .rs-title{font-size:14px!important;margin-bottom:7px!important}
+  .vh{background:rgba(255,255,255,.09)!important}
+  .cc,.ph-tasks,.ck{background:#f8f6f1!important}
+  .rb3{background:#0f1f3d!important}
+  .dep{background:rgba(201,168,76,.1)!important}
+  .sgap{background:rgba(180,83,9,.06)!important}
+  .rf{background:#f8f6f1!important}
+  .cc,.ck,.ph-row,.vh{page-break-inside:avoid!important}
+  h1,h2,h3,h4,.rs-title{page-break-after:avoid!important}
+  .cc .tl li{font-size:9.5px!important;padding:2px 0!important}
+  .rb3 ul li{font-size:10px!important;padding:3px 0!important}
+  .pt{font-size:10px!important;padding:3px 0!important}
+  .rh h1{font-size:19px!important}
+}
+
+/* Advisor print mode */
+body.print-adv .rpt{display:none!important}
+body.print-adv #rep-area{display:block!important}
+body.print-adv .adv{border:none!important;border-radius:0!important}
+body.print-adv .adv-h{border-radius:0!important}
+body.print-adv #adv-area{display:block!important}
+body.print-adv .rep-acts{display:none!important}
+body.print-adv .brand{display:none!important}
+body.print-adv .progress{display:none!important}
+body.print-adv .sec{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="brand">
+  <div class="brand-icon"><i class="ti ti-map-route"></i></div>
+  <div>
+    <div class="brand-name">Life-Aligned Home Buying System™</div>
+    <div class="brand-sub">Buyer Readiness Map</div>
+    <div class="priv"><i class="ti ti-shield-lock" style="font-size:10px;margin-right:3px;"></i>No client data is stored or transmitted. Generated locally — exists only in this session.</div>
+  </div>
+</div>
+
+<div class="progress" id="prog">
+  <div class="pill active" id="p1"></div><div class="pill" id="p2"></div>
+  <div class="pill" id="p3"></div><div class="pill" id="p4"></div>
+  <span class="plbl" id="plbl">Section 1 of 4</span>
+</div>
+
+<!-- ── S1: BUYER PROFILE ── -->
+<div class="sec on" id="s1">
+  <div class="sec-hd"><div class="sn">1</div><div><div class="st">Buyer Profile</div><div class="ss">Client identification and household context</div></div></div>
+  <div class="g2">
+    <div class="f"><label>First Name <span class="req">*</span></label><input id="fn" type="text" placeholder="First name"></div>
+    <div class="f"><label>Last Name <span class="req">*</span></label><input id="ln" type="text" placeholder="Last name"></div>
+    <div class="f"><label>Advisor Name <span class="req">*</span></label><input id="adv" type="text" placeholder="Your name"></div>
+    <div class="f"><label>Employment Type <span class="req">*</span></label>
+      <select id="emp">
+        <option value="">— Select —</option>
+        <option value="w2">W-2 Employee</option>
+        <option value="self">Self-Employed (2+ yrs)</option>
+        <option value="self1">Self-Employed (under 2 yrs)</option>
+        <option value="1099">1099 / Contract</option>
+        <option value="mixed">Mixed Income</option>
+        <option value="retired">Retired / Fixed Income</option>
+      </select>
+    </div>
+  </div>
+  <div class="nav"><span></span><button class="bnx" onclick="go(2)">Continue <i class="ti ti-arrow-right"></i></button></div>
+</div>
+
+<!-- ── S2: MORTGAGE READINESS ── -->
+<div class="sec" id="s2">
+  <div class="sec-hd"><div class="sn">2</div><div><div class="st">Mortgage Readiness</div><div class="ss">Traditional qualification factors — select all that apply in each category</div></div></div>
+  <div class="info">Rate each category based on what the B$Smart Assessment and Impact Brief revealed. Checkboxes capture specific conditions — status buttons reflect your overall assessment.</div>
+
+  <!-- Credit -->
+  <div class="ac">
+    <div class="ac-hd"><i class="ti ti-chart-bar"></i><div><div class="ac-title">Credit Position</div><div class="ac-sub">Score range, profile health, derogatory items</div></div></div>
+    <div class="g2">
+      <div class="f"><label>Credit Score Range <span class="req">*</span></label>
+        <select id="cs">
+          <option value="">— Select —</option>
+          <option value="x620">Below 620 — not yet eligible for most products</option>
+          <option value="620">620–659 — limited options, higher rate</option>
+          <option value="660">660–699 — standard eligibility, rate improvement opportunity</option>
+          <option value="700">700–739 — good position, optimization still possible</option>
+          <option value="740">740–779 — strong, minimal intervention needed</option>
+          <option value="780">780+ — excellent, priority is maintenance</option>
+        </select>
+      </div>
+      <div class="f"><label>Rapid Rescore Candidate?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="rsc" value="yes"> Yes</label>
+          <label class="rb"><input type="radio" name="rsc" value="no"> No</label>
+          <label class="rb"><input type="radio" name="rsc" value="unk"> Not Sure</label>
+        </div>
+      </div>
+    </div>
+    <div class="f" style="margin-top:10px"><label>Current Credit Conditions — check all that apply</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="cc-col"><span>Collections or charge-offs present</span></label>
+        <label class="cb-item"><input type="checkbox" id="cc-late"><span>Late payments in last 24 months</span></label>
+        <label class="cb-item"><input type="checkbox" id="cc-bk"><span>Bankruptcy in last 7 years</span></label>
+        <label class="cb-item"><input type="checkbox" id="cc-fc"><span>Foreclosure or short sale in last 7 years</span></label>
+        <label class="cb-item"><input type="checkbox" id="cc-high"><span>High utilization on revolving accounts (over 30%)</span></label>
+        <label class="cb-item"><input type="checkbox" id="cc-thin"><span>Thin file — fewer than 3 open trade lines</span></label>
+      </div>
+    </div>
+    <div class="sbr">
+      <button class="sb needs" onclick="ss(this,'credit','needs')">Needs Work</button>
+      <button class="sb prog" onclick="ss(this,'credit','prog')">In Progress</button>
+      <button class="sb ready" onclick="ss(this,'credit','ready')">Ready</button>
+    </div>
+    <textarea class="an" id="cn-credit" rows="2" placeholder="Optional: specific advisor notes on credit situation..."></textarea>
+  </div>
+
+  <!-- Income -->
+  <div class="ac">
+    <div class="ac-hd"><i class="ti ti-file-invoice"></i><div><div class="ac-title">Income & Documentation</div><div class="ac-sub">Stability, verification readiness, documentation completeness</div></div></div>
+    <div class="f"><label>Employment Gap in Last 2 Years?</label>
+      <div class="rg">
+        <label class="rb"><input type="radio" name="empgap" value="yes"> Yes — explanation letter needed</label>
+        <label class="rb"><input type="radio" name="empgap" value="no"> No</label>
+      </div>
+    </div>
+    <div class="f" style="margin-top:10px"><label>Documentation Checklist — check items that are complete and in hand</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="doc-t2"><span>2 years federal tax returns (personal)</span></label>
+        <label class="cb-item"><input type="checkbox" id="doc-w2"><span>W-2s for last 2 years</span></label>
+        <label class="cb-item"><input type="checkbox" id="doc-ps"><span>30-day pay stubs (most recent)</span></label>
+        <label class="cb-item"><input type="checkbox" id="doc-bs"><span>60-day bank statements (all accounts)</span></label>
+        <label class="cb-item"><input type="checkbox" id="doc-bt"><span>Business tax returns — 2 years (if self-employed)</span></label>
+        <label class="cb-item"><input type="checkbox" id="doc-pl"><span>Year-to-date P&L statement (if self-employed)</span></label>
+        <label class="cb-item"><input type="checkbox" id="doc-ss"><span>Social Security / pension / retirement income documentation</span></label>
+      </div>
+    </div>
+    <div class="sbr">
+      <button class="sb needs" onclick="ss(this,'income','needs')">Needs Work</button>
+      <button class="sb prog" onclick="ss(this,'income','prog')">In Progress</button>
+      <button class="sb ready" onclick="ss(this,'income','ready')">Ready</button>
+    </div>
+    <textarea class="an" id="cn-income" rows="2" placeholder="Optional: income type complexity, bonus/commission history, gaps..."></textarea>
+  </div>
+
+  <!-- Debt -->
+  <div class="ac">
+    <div class="ac-hd"><i class="ti ti-credit-card"></i><div><div class="ac-title">Debt & Cash Flow</div><div class="ac-sub">DTI position, accounts to address, monthly capacity</div></div></div>
+    <div class="g2">
+      <div class="f"><label>Estimated Current DTI <span class="req">*</span></label>
+        <select id="dti">
+          <option value="">— Select —</option>
+          <option value="low">Under 36% — strong position</option>
+          <option value="ok">36–43% — acceptable range</option>
+          <option value="tight">43–50% — tight, needs attention</option>
+          <option value="high">Over 50% — must reduce before VAL</option>
+        </select>
+      </div>
+      <div class="f"><label>Student Loans Present?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="sl" value="yes"> Yes</label>
+          <label class="rb"><input type="radio" name="sl" value="no"> No</label>
+        </div>
+      </div>
+    </div>
+    <div class="f" style="margin-top:10px"><label>Debt Conditions — check all that apply</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="dt-pay"><span>Accounts to pay down to reduce DTI</span></label>
+        <label class="cb-item"><input type="checkbox" id="dt-close"><span>Accounts to close (with advisor review first)</span></label>
+        <label class="cb-item"><input type="checkbox" id="dt-auto"><span>Auto loan(s) affecting DTI</span></label>
+        <label class="cb-item"><input type="checkbox" id="dt-co"><span>Co-signed obligations not being paid by buyer</span></label>
+        <label class="cb-item"><input type="checkbox" id="dt-cs"><span>Child support or alimony obligations</span></label>
+      </div>
+    </div>
+    <div class="sbr">
+      <button class="sb needs" onclick="ss(this,'debt','needs')">Needs Work</button>
+      <button class="sb prog" onclick="ss(this,'debt','prog')">In Progress</button>
+      <button class="sb ready" onclick="ss(this,'debt','ready')">Ready</button>
+    </div>
+    <textarea class="an" id="cn-debt" rows="2" placeholder="Optional: specific accounts, paydown targets, DTI reduction plan..."></textarea>
+  </div>
+
+  <!-- Assets -->
+  <div class="ac">
+    <div class="ac-hd"><i class="ti ti-piggy-bank"></i><div><div class="ac-title">Assets & Down Payment</div><div class="ac-sub">Savings target, gap calculation, seasoning, gift funds</div></div></div>
+    <div class="g2">
+      <div class="f"><label>Down Payment Target <span class="req">*</span></label>
+        <div class="dw"><input id="dp-tgt" class="dl" type="number" placeholder="e.g. 60000" oninput="calcSavingsGap()"></div>
+      </div>
+      <div class="f"><label>Current Savings Available <span class="req">*</span></label>
+        <div class="dw"><input id="dp-cur" class="dl" type="number" placeholder="e.g. 22000" oninput="calcSavingsGap()"></div>
+      </div>
+      <div class="f"><label>Monthly Savings Rate</label>
+        <div class="dw"><input id="dp-mo" class="dl" type="number" placeholder="e.g. 1500" oninput="calcSavingsGap()"></div>
+      </div>
+      <div class="f"><label>Closing Costs Needed (est.)</label>
+        <div class="dw"><input id="dp-cc" class="dl" type="number" placeholder="e.g. 8000" oninput="calcSavingsGap()"></div>
+      </div>
+    </div>
+    <div class="hint" style="margin-top:8px;line-height:1.6;font-size:10.5px;">Formula: <strong>Total Needed</strong> = Down Payment Target + Closing Costs Needed. <strong>Gap</strong> = Total Needed − Current Savings Available. Closing Costs Needed is an additional amount to fund — not already-available money — so entering it increases the gap.</div>
+    <div class="savings-calc" id="sgap-calc"></div>
+    <div class="f" style="margin-top:10px"><label>Asset Conditions — check all that apply</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="as-seas"><span>All funds fully seasoned (60+ days in account)</span></label>
+        <label class="cb-item"><input type="checkbox" id="as-gift"><span>Gift funds involved — gift letter needed</span></label>
+        <label class="cb-item"><input type="checkbox" id="as-ret"><span>Retirement funds as source (401k/IRA withdrawal or loan)</span></label>
+        <label class="cb-item"><input type="checkbox" id="as-sale"><span>Proceeds from sale of existing home</span></label>
+        <label class="cb-item"><input type="checkbox" id="as-bus"><span>Business funds — sourcing documentation required</span></label>
+      </div>
+    </div>
+    <div class="sbr">
+      <button class="sb needs" onclick="ss(this,'assets','needs')">Needs Work</button>
+      <button class="sb prog" onclick="ss(this,'assets','prog')">In Progress</button>
+      <button class="sb ready" onclick="ss(this,'assets','ready')">Ready</button>
+    </div>
+    <textarea class="an" id="cn-assets" rows="2" placeholder="Optional: specific asset sourcing notes, seasoning timeline..."></textarea>
+  </div>
+
+  <div class="nav"><button class="bbk" onclick="go(2)">Back</button><button class="bnx" onclick="go(3)">Continue <i class="ti ti-arrow-right"></i></button></div>
+</div>
+
+<!-- ── S3: LIFE-ALIGNED READINESS ── -->
+<div class="sec" id="s3">
+  <div class="sec-hd"><div class="sn">3</div><div><div class="st">Life-Aligned Readiness</div><div class="ss">Our unique components — what separates prepared buyers from merely approved ones</div></div></div>
+
+  <!-- Life Alignment -->
+  <div class="ac">
+    <div class="ac-hd"><i class="ti ti-target"></i><div><div class="ac-title">Life Alignment</div><div class="ac-sub">FIN# protected, purchase scenario confirmed, investing capacity preserved</div></div></div>
+    <div class="g2">
+      <div class="f"><label>Impact Brief Completed?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="brief" value="yes"> Yes</label>
+          <label class="rb"><input type="radio" name="brief" value="no"> Not yet</label>
+        </div>
+      </div>
+      <div class="f"><label>Purchase Scenario Selected</label>
+        <select id="scen">
+          <option value="">— Not yet selected —</option>
+          <option value="A">Scenario A — Maximum Qualifying</option>
+          <option value="B">Scenario B — Coordinated / Life-Aligned</option>
+          <option value="custom">Custom / Advisor Override</option>
+        </select>
+      </div>
+    </div>
+    <div class="f" style="margin-top:10px"><label>Alignment Conditions — check all confirmed</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="al-fin"><span>FIN# (Financial Independence Number) established and understood by buyer</span></label>
+        <label class="cb-item"><input type="checkbox" id="al-inv"><span>Required monthly investment contribution protected in purchase structure</span></label>
+        <label class="cb-item"><input type="checkbox" id="al-cf"><span>Monthly cash flow after housing payment is acceptable to buyer</span></label>
+        <label class="cb-item"><input type="checkbox" id="al-eq"><span>Equity concentration and net worth distribution discussed and understood</span></label>
+        <label class="cb-item"><input type="checkbox" id="al-ret"><span>Retirement alignment status reviewed (Generally Aligned / Below Target)</span></label>
+      </div>
+    </div>
+    <div class="sbr">
+      <button class="sb needs" onclick="ss(this,'align','needs')">Needs Work</button>
+      <button class="sb prog" onclick="ss(this,'align','prog')">In Progress</button>
+      <button class="sb ready" onclick="ss(this,'align','ready')">Ready</button>
+    </div>
+    <textarea class="an" id="cn-align" rows="2" placeholder="Optional: scenario notes, FIN# gap, specific alignment concerns..."></textarea>
+  </div>
+
+  <!-- Ownership Structure -->
+  <div class="ac">
+    <div class="ac-hd"><i class="ti ti-building-estate"></i><div><div class="ac-title">Ownership Structure</div><div class="ac-sub">Title vesting decision, trust formation, estate planning partner introduction</div></div></div>
+    <div class="tr">
+      <div class="tr-left">
+        <div class="trl">Buyer intends to vest title in a trust</div>
+        <div class="trs">Activates the hard deadline dependency chain — trust must be formed before closing</div>
+      </div>
+      <label class="tsw"><input type="checkbox" id="trust" onchange="toggleTrust()"><span class="tsl"></span></label>
+    </div>
+    <div class="tflag" id="tf" style="display:none">
+      <i class="ti ti-alert-triangle"></i>
+      <div>
+        <div class="tf-t">Hard Deadline Dependency Activated</div>
+        <div class="tf-b">Trust formation must complete at least 8 weeks before closing. The estate planning partner introduction must happen at THIS session. Warm introduction must be made before buyer leaves today. Confirm loan product is trust-eligible before VAL submission.</div>
+      </div>
+    </div>
+    <div class="f" style="margin-top:10px"><label>Ownership Structure Conditions — check all confirmed</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="ow-op"><span>Ownership Protection conversation completed (4 questions walked)</span></label>
+        <label class="cb-item"><input type="checkbox" id="ow-vest"><span>Title vesting decision made (sole, joint tenancy, tenants in common, or trust)</span></label>
+        <label class="cb-item"><input type="checkbox" id="ow-ep"><span>Estate planning partner introduced (warm intro completed or scheduled)</span></label>
+        <label class="cb-item"><input type="checkbox" id="ow-trust"><span>Trust formation complete and documented (if vesting in trust)</span></label>
+        <label class="cb-item"><input type="checkbox" id="ow-eli"><span>Loan product confirmed trust-eligible (if vesting in trust)</span></label>
+      </div>
+    </div>
+    <div class="sbr">
+      <button class="sb needs" onclick="ss(this,'ownership','needs')">Needs Work</button>
+      <button class="sb prog" onclick="ss(this,'ownership','prog')">In Progress</button>
+      <button class="sb ready" onclick="ss(this,'ownership','ready')">Ready</button>
+    </div>
+    <textarea class="an" id="cn-ownership" rows="2" placeholder="Optional: vesting decision, estate planning timeline, trust status..."></textarea>
+  </div>
+
+  <!-- Competitive Readiness -->
+  <div class="ac">
+    <div class="ac-hd"><i class="ti ti-trophy"></i><div><div class="ac-title">Competitive Readiness</div><div class="ac-sub">VAL status, Realtor partner, offer strategy</div></div></div>
+    <div class="f"><label>Competitive Conditions — check all confirmed</label>
+      <div class="cb-group">
+        <label class="cb-item"><input type="checkbox" id="cr-val"><span>Verified Approval (VAL) submitted to underwriting</span></label>
+        <label class="cb-item"><input type="checkbox" id="cr-vali"><span>Verified Approval issued — buyer is VAL Ready</span></label>
+        <label class="cb-item"><input type="checkbox" id="cr-re"><span>Realtor partner engaged and briefed on buyer's VAL status</span></label>
+        <label class="cb-item"><input type="checkbox" id="cr-off"><span>Offer strategy conversation completed with advisor and Realtor</span></label>
+        <label class="cb-item"><input type="checkbox" id="cr-mkt"><span>Buyer understands current market conditions in their target area</span></label>
+      </div>
+    </div>
+    <div class="sbr">
+      <button class="sb needs" onclick="ss(this,'compete','needs')">Needs Work</button>
+      <button class="sb prog" onclick="ss(this,'compete','prog')">In Progress</button>
+      <button class="sb ready" onclick="ss(this,'compete','ready')">Ready</button>
+    </div>
+    <textarea class="an" id="cn-compete" rows="2" placeholder="Optional: VAL timeline, Realtor partnership notes, market context..."></textarea>
+  </div>
+
+  <div class="nav"><button class="bbk" onclick="go(2)">Back</button><button class="bnx" onclick="go(4)">Continue <i class="ti ti-arrow-right"></i></button></div>
+</div>
+
+<!-- ── S4: TIMELINE ── -->
+<div class="sec" id="s4">
+  <div class="sec-hd"><div class="sn">4</div><div><div class="st">Timeline & Configuration</div><div class="ss">How the map is structured and how deadlines are calculated</div></div></div>
+  <div class="tr">
+    <div class="tr-left">
+      <div class="trl">Closing window established</div>
+      <div class="trs">Toggle on if buyer has a target closing date — enables hard deadline back-calculations</div>
+    </div>
+    <label class="tsw"><input type="checkbox" id="win" onchange="toggleWin()"><span class="tsl"></span></label>
+  </div>
+  <div id="win-f" style="display:none;margin-bottom:12px">
+    <div class="g2">
+      <div class="f"><label>Target Closing Date <span class="req">*</span></label><input id="cdate" type="date"></div>
+      <div class="f"><label>Target Price Range</label><input id="prange" type="text" placeholder="e.g. $350,000 – $400,000"></div>
+    </div>
+  </div>
+  <div id="oe-f" style="margin-bottom:12px">
+    <div class="f"><label>Estimated Purchase Timeline</label>
+      <select id="tl-est">
+        <option value="3">Within 3 months</option>
+        <option value="6" selected>3–6 months</option>
+        <option value="9">6–9 months</option>
+        <option value="12">9–12 months</option>
+        <option value="18">12–18 months</option>
+      </select>
+    </div>
+  </div>
+  <div class="f" style="margin-bottom:12px"><label>Additional Advisor Context</label>
+    <textarea id="ctx" rows="3" style="resize:none;font-size:12px;background:var(--cream);border:.5px solid var(--bdr);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;width:100%;outline:none;" placeholder="Any specific circumstances, goals, or buyer context that should shape this map..."></textarea>
+  </div>
+  <div class="nav">
+    <button class="bbk" onclick="go(3)">Back</button>
+    <button class="bgen" onclick="gen()"><i class="ti ti-map"></i> Generate Readiness Map</button>
+  </div>
+</div>
+
+<!-- ── OUTPUT ── -->
+<div id="rep-area">
+  <div class="rep-acts">
+    <div class="rep-acts-l">
+      <button class="bpr" onclick="printClient()"><i class="ti ti-printer"></i> Print Client Map</button>
+      <button class="badv" onclick="showAdv()"><i class="ti ti-clipboard-list"></i> Advisor Summary</button>
+      <button class="bpr" onclick="printAdv()"><i class="ti ti-printer"></i> Print Advisor Summary</button>
+    </div>
+    <button class="bnw" onclick="startOver()"><i class="ti ti-refresh"></i> New Client</button>
+  </div>
+  <div class="rpt" id="rpt"></div>
+</div>
+
+<div id="adv-area">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin:1rem 0 .5rem">
+    <span style="font-size:12px;color:var(--muted);font-style:italic;">Advisor Summary — internal use only. Does not print with client map.</span>
+  </div>
+  <div class="adv" id="advr"></div>
+</div>
+
+</div><!-- end wrap -->
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+const ST={};
+const W={credit:18,income:15,debt:15,assets:17,align:12,ownership:11,compete:12};
+const CATS=['credit','income','debt','assets','align','ownership','compete'];
+const CM={
+  credit:   {label:'Credit Position',        icon:'ti-chart-bar'},
+  income:   {label:'Income & Documentation', icon:'ti-file-invoice'},
+  debt:     {label:'Debt & Cash Flow',       icon:'ti-credit-card'},
+  assets:   {label:'Assets & Down Payment',  icon:'ti-piggy-bank'},
+  align:    {label:'Life Alignment',         icon:'ti-target'},
+  ownership:{label:'Ownership Structure',    icon:'ti-building-estate'},
+  compete:  {label:'Competitive Readiness',  icon:'ti-trophy'},
+};
+
+// Condition checkbox definitions per category — surfaced in client map & advisor summary.
+// mode:'confirm' = completion checklist (checked=good/green, unchecked=outstanding/red)
+// mode:'note'    = informational flags (only checked items shown, neutral gold pill)
+const CONDS={
+  credit:{mode:'note',items:[
+    ['cc-col','Collections/charge-offs present'],['cc-late','Late payments (24mo)'],
+    ['cc-bk','Bankruptcy (7yr)'],['cc-fc','Foreclosure/short sale (7yr)'],
+    ['cc-high','High utilization (>30%)'],['cc-thin','Thin file (<3 tradelines)']]},
+  income:{mode:'confirm',items:[
+    ['doc-t2','2yr tax returns'],['doc-w2','W-2s'],['doc-ps','Pay stubs'],
+    ['doc-bs','Bank statements'],['doc-bt','Business returns'],['doc-pl','YTD P&L'],
+    ['doc-ss','SS/pension docs']]},
+  debt:{mode:'note',items:[
+    ['dt-pay','Accounts to pay down'],['dt-close','Accounts to close (advisor review)'],
+    ['dt-auto','Auto loan affecting DTI'],['dt-co','Co-signed obligations'],
+    ['dt-cs','Child support/alimony']]},
+  assets:{mode:'note',items:[
+    ['as-seas','Funds seasoned 60+ days'],['as-gift','Gift funds involved'],
+    ['as-ret','Retirement funds as source'],['as-sale','Proceeds from home sale'],
+    ['as-bus','Business funds — sourcing required']]},
+  align:{mode:'confirm',items:[
+    ['al-fin','FIN# established'],['al-inv','Investment contribution protected'],
+    ['al-cf','Cash flow after housing acceptable'],['al-eq','Equity concentration discussed'],
+    ['al-ret','Retirement alignment reviewed']]},
+  ownership:{mode:'confirm',items:[
+    ['ow-op','Ownership Protection conversation done'],['ow-vest','Vesting decision made'],
+    ['ow-ep','Estate planning partner introduced'],['ow-trust','Trust formation complete'],
+    ['ow-eli','Loan product trust-eligible']]},
+  compete:{mode:'confirm',items:[
+    ['cr-val','VAL submitted'],['cr-vali','VAL issued'],['cr-re','Realtor briefed'],
+    ['cr-off','Offer strategy done'],['cr-mkt','Market conditions understood']]},
+};
+function renderConfirm(items){
+  return items.map(([id,lbl])=>{
+    const checked=document.getElementById(id)?.checked;
+    return `<span style="font-size:9.5px;padding:2px 7px;border-radius:8px;margin:0 4px 4px 0;display:inline-block;background:${checked?'rgba(22,101,52,.1)':'rgba(185,28,28,.1)'};color:${checked?'#166534':'#b91c1c'}">${checked?'✓':'○'} ${lbl}</span>`;
+  }).join('');
+}
+function renderNotes(items){
+  const checked=items.filter(([id])=>document.getElementById(id)?.checked);
+  if(!checked.length) return '<span style="font-size:10px;color:var(--muted);font-style:italic;">No specific conditions flagged.</span>';
+  return checked.map(([id,lbl])=>`<span style="font-size:9.5px;padding:2px 7px;border-radius:8px;margin:0 4px 4px 0;display:inline-block;background:rgba(201,168,76,.15);color:var(--navy)">⚑ ${lbl}</span>`).join('');
+}
+function condBlock(cat){
+  const def=CONDS[cat]; if(!def) return '';
+  const lbl=def.mode==='confirm'?'Conditions Confirmed':'Conditions Noted';
+  const body=def.mode==='confirm'?renderConfirm(def.items):renderNotes(def.items);
+  return `<div class="condwrap"><div class="condlbl">${lbl}</div><div class="condpills">${body}</div></div>`;
+}
+
+// ── NAV ────────────────────────────────────────────────────────────────────
+let cur=1;
+function go(s){
+  document.getElementById('s'+cur).classList.remove('on');
+  cur=s; document.getElementById('s'+s).classList.add('on');
+  updateP(); window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateP(){
+  document.getElementById('plbl').textContent='Section '+cur+' of 4';
+  for(let i=1;i<=4;i++){
+    const p=document.getElementById('p'+i);
+    p.className='pill'+(i<cur?' done':i===cur?' active':'');
+  }
+}
+
+// ── STATUS ─────────────────────────────────────────────────────────────────
+function ss(btn,cat,val){
+  btn.closest('.ac').querySelectorAll('.sb').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel'); ST[cat]=val;
+}
+
+// ── TOGGLES ────────────────────────────────────────────────────────────────
+function toggleTrust(){
+  const on=document.getElementById('trust').checked;
+  document.getElementById('tf').style.display=on?'flex':'none';
+}
+function toggleWin(){
+  const on=document.getElementById('win').checked;
+  document.getElementById('win-f').style.display=on?'block':'none';
+  document.getElementById('oe-f').style.display=on?'none':'block';
+}
+
+// ── SAVINGS GAP ────────────────────────────────────────────────────────────
+function calcSavingsGap(){
+  const tgt=parseFloat(document.getElementById('dp-tgt').value)||0;
+  const cur2=parseFloat(document.getElementById('dp-cur').value)||0;
+  const mo=parseFloat(document.getElementById('dp-mo').value)||0;
+  const cc=parseFloat(document.getElementById('dp-cc').value)||0;
+  const el=document.getElementById('sgap-calc');
+  const totalNeed=tgt+cc;
+  if(tgt>0&&cur2>=0){
+    const gap=Math.max(totalNeed-cur2,0);
+    const months=mo>0?Math.ceil(gap/mo):null;
+    el.style.display='block';
+    el.innerHTML=gap<=0
+      ?'<i class="ti ti-circle-check" style="color:var(--grn)"></i> <strong>Savings target met</strong> — down payment and closing costs are covered.'
+      :`<i class="ti ti-clock" style="color:var(--amb)"></i> <strong>Gap: $${gap.toLocaleString()}</strong> — total needed (down payment + closing costs): $${totalNeed.toLocaleString()}${months?`. At $${mo.toLocaleString()}/mo — approximately <strong>${months} months</strong> to reach target.`:''}`;
+  } else { el.style.display='none'; }
+}
+
+// ── SCORE ──────────────────────────────────────────────────────────────────
+function score(){
+  return Math.round(CATS.reduce((s,c)=>{
+    const v=ST[c];
+    return s+(v==='ready'?W[c]:v==='prog'?W[c]*.5:0);
+  },0));
+}
+function tier(sc){
+  if(sc<=39)  return{lbl:'Laying the Foundation',col:'#e55a5a',desc:"You're building the base everything else stands on. Each completed step creates the platform for everything that follows."};
+  if(sc<=64)  return{lbl:'Building Momentum',    col:'#c9a84c',desc:"The hard work is happening and it's showing. The path is getting clearer with every milestone."};
+  if(sc<=84)  return{lbl:'In the Approach',      col:'#f59e0b',desc:"You're close. These final steps separate truly prepared buyers from everyone else in this market."};
+  if(sc<=99)  return{lbl:'VAL Ready',            col:'#22c55e',desc:"You're in position. The work you've done puts you ahead of most buyers. Let's talk next steps."};
+  return       {lbl:'Cleared for Launch',        col:'#16a34a',desc:"This is what prepared looks like. Every box checked. Every condition met. Time to move with confidence."};
+}
+
+// ── RING SVG ───────────────────────────────────────────────────────────────
+function ringH(sc,col){
+  const r=32,cx=40,cy=40,ci=2*Math.PI*r,fill=ci*(sc/100);
+  return `<svg width="80" height="80" viewBox="0 0 80 80">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="7"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="7"
+      stroke-dasharray="${fill} ${ci}" stroke-linecap="round"
+      transform="rotate(-90 ${cx} ${cy})"/></svg>`;
+}
+function ringM(pct,col){
+  const r=13,cx=17,cy=17,ci=2*Math.PI*r,fill=ci*(pct/100);
+  return `<svg width="34" height="34" viewBox="0 0 34 34" style="flex-shrink:0">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#e8ddd0" stroke-width="3.5"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="3.5"
+      stroke-dasharray="${fill} ${ci}" stroke-linecap="round"
+      transform="rotate(-90 ${cx} ${cy})"/></svg>`;
+}
+function scol(s){return s==='ready'?'#166534':s==='prog'?'#b45309':'#b91c1c';}
+function spct(s){return s==='ready'?100:s==='prog'?50:8;}
+function sbdg(s){
+  if(s==='ready') return '<span class="bdg ready">Ready</span>';
+  if(s==='prog')  return '<span class="bdg prog">In Progress</span>';
+  return '<span class="bdg needs">Needs Work</span>';
+}
+function sicon(s){
+  if(s==='ready') return '<i class="ti ti-circle-check i-ok"></i>';
+  if(s==='prog')  return '<i class="ti ti-clock i-wa"></i>';
+  return '<i class="ti ti-circle-x i-no"></i>';
+}
+
+// ── TRUST DEADLINE DATE ─────────────────────────────────────────────────────
+function trustDeadlineDate(closingDate){
+  if(!closingDate) return null;
+  const d=new Date(closingDate);
+  d.setDate(d.getDate()-56);
+  return d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+}
+
+// ── TASKS ──────────────────────────────────────────────────────────────────
+function tasks(cat,status,emp,dti,cs,trust){
+  const s=status||'needs';
+  const T={
+    credit:{
+      needs:['Pull tri-merge credit report and review for errors','Dispute any inaccuracies or unrecognized accounts in writing',cs==='x620'||cs==='620'?'Work with advisor on credit building — score must reach minimum threshold':'Identify rapid rescore opportunities if derogatory items are disputable','Address high utilization — target below 30% on all revolving accounts','Establish consistent on-time payment discipline — every account, every month'],
+      prog: ['Continue on-time payment discipline through closing','Monitor score monthly — report progress at each check-in','Confirm derogatory item resolution is complete or on schedule'],
+      ready:['Maintain payment discipline and utilization through closing','Avoid opening new accounts, new inquiries, or major purchases','Re-verify score within 30 days of VAL submission'],
+    },
+    income:{
+      needs:['Gather last 2 years of federal tax returns',emp==='self'||emp==='self1'?'Prepare 2 years of business returns AND current year-to-date P&L':'Collect 30-day pay stubs and most recent W-2s','Pull 60-day bank statements for all accounts','Address any employment gaps with a written explanation letter','Organize all documentation into a clean, complete package'],
+      prog: ['Confirm documentation package is complete and current','Update pay stubs monthly as needed','Resolve any income inconsistencies with advisor guidance'],
+      ready:['Keep documentation current — update stubs and statements as needed','Notify advisor immediately of any employment or income changes before VAL'],
+    },
+    debt:{
+      needs:[dti==='high'?'DTI is over 50% — debt reduction is the single most important task on this map':'Review all monthly obligations and identify highest-impact accounts','Build a targeted paydown plan — smallest balance first for fastest DTI impact','Do not open any new credit accounts or take on new obligations','Do not close accounts without advisor review — may negatively impact score','Confirm student loan payment and status with advisor if applicable'],
+      prog: ['Continue paydown plan on schedule — report progress at each check-in','Review DTI monthly as balances reduce','Confirm final DTI target with advisor for chosen loan product'],
+      ready:['Maintain current balances through closing','No new debt, no co-signing, no major purchases until after keys are in hand'],
+    },
+    assets:{
+      needs:['Calculate total needed: down payment + closing costs + reserves','Open a dedicated savings account for down payment funds if not already established','Set up automated monthly savings transfer to reach target on schedule','Document source of all large deposits — unexplained deposits create underwriting problems','Confirm 60-day seasoning requirement for all funds — do not move money unnecessarily'],
+      prog: ['Continue monthly savings on schedule','Gather gift fund documentation and gift letter if applicable','Confirm all asset accounts are sourced, seasoned, and documented'],
+      ready:['Do not move funds between accounts without advisor approval','Maintain reserves — do not drain savings account at closing','Confirm final asset documentation with advisor before VAL submission'],
+    },
+    align:{
+      needs:['Complete the Buyer Impact Brief session with your advisor','Review Scenario A vs Scenario B and confirm which structure fits your life goals','Confirm your FIN# and understand how the home purchase affects your retirement path','Verify that your monthly investment contribution is protected in the purchase structure','Review net worth distribution and equity concentration projections with advisor'],
+      prog: ['Confirm selected scenario is still aligned with current market conditions','Verify investment contribution will be maintained after housing payment','Review any changes to income or expenses that may affect alignment'],
+      ready:['Financial structure confirmed — proceed with confidence','Revisit annually with advisor to ensure alignment holds as life evolves'],
+    },
+    ownership:{
+      needs:[trust?'Schedule estate planning partner consultation THIS WEEK — hard deadline is active':'Complete the Ownership Protection conversation with your advisor (4 questions)','Make the title vesting decision — who holds title and in what structure','Understand the difference between probate exposure and trust protection',trust?'Trust formation typically takes 2–6 weeks — start immediately':'Review beneficiary designations on existing accounts and policies'],
+      prog: [trust?'Confirm trust formation is on schedule — must be complete 8+ weeks before closing':'Finalize vesting decision with advisor',trust?'Verify loan product is trust-eligible with advisor before VAL submission':'Estate planning partner introduction completed or scheduled'],
+      ready:[trust?'Trust documents in place — confirm with escrow that title will vest in trust name':'Vesting structure confirmed — notify escrow of title instructions','Ownership Protection conversation complete — buyer understands their structure'],
+    },
+    compete:{
+      needs:['Complete all mortgage readiness milestones — VAL cannot be submitted until ready','Learn the difference between pre-qualification and Verified Approval (VAL)','Engage a Realtor partner for market education and home search strategy','Discuss offer strategy with your advisor and Realtor before you start shopping'],
+      prog: ['VAL submission timeline confirmed with advisor','Review offer strategy with Realtor partner for your target market','Confirm Realtor is briefed on your VAL status and what it means for offer strength'],
+      ready:['Verified Approval issued — you are a competitive buyer in any market','Realtor partner engaged and fully briefed on your position','Offer strategy confirmed — you are ready to move when the right home appears'],
+    },
+  };
+  return (T[cat][s]||T[cat]['needs']);
+}
+
+// ── PHASES ─────────────────────────────────────────────────────────────────
+function phases(trust,closingDate,tlEst,dti){
+  const hasWin=!!closingDate;
+  const catPhase={
+    credit:    ST.credit==='ready'?3:ST.credit==='prog'?1:0,
+    income:    ST.income==='ready'?3:ST.income==='prog'?1:0,
+    debt:      ST.debt==='ready'?3:ST.debt==='prog'?1:(dti==='high'?0:2),
+    assets:    ST.assets==='ready'?3:ST.assets==='prog'?2:1,
+    align:     ST.align==='ready'?3:ST.align==='prog'?2:1,
+    ownership: ST.ownership==='ready'?3:(trust?(ST.ownership==='prog'?2:0):2),
+    compete:   ST.compete==='ready'?3:2,
+  };
+  const phDefs=[
+    {lbl:'Now — Start Immediately',          col:'#b91c1c'},
+    {lbl:'Within 30 Days',                   col:'#b45309'},
+    {lbl:'Within 60 Days',                   col:'#c9a84c'},
+    {lbl:'Final Stretch — VAL Preparation',  col:'#166534'},
+  ];
+  const items=CATS.map(c=>({
+    cat:c,phase:catPhase[c],lbl:CM[c].label,status:ST[c]||'needs',
+    hardDep:c==='ownership'&&trust&&ST[c]!=='ready',
+  }));
+
+  function phDate(ph){
+    if(!hasWin) return '';
+    const d=new Date(closingDate);
+    const offs=[90,60,45,14];
+    const dt=new Date(d); dt.setDate(dt.getDate()-offs[ph]);
+    return 'Target: '+dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  }
+
+  const tdd=hasWin?trustDeadlineDate(closingDate):null;
+
+  return phDefs.map((ph,pi)=>{
+    const its=items.filter(i=>i.phase===pi);
+    if(!its.length) return '';
+    return `<div class="ph-row">
+      <div class="ph-hd">
+        <div class="ph-dot" style="background:${ph.col}"></div>
+        <div class="ph-lbl">${ph.lbl}</div>
+        ${hasWin?`<div class="ph-dt">${phDate(pi)}</div>`:''}
+      </div>
+      <div class="ph-tasks">
+        ${its.map(it=>`<div class="pt${it.hardDep?' hd-flag':''}">
+          <div class="pt-cat">${it.lbl.split(' ')[0]}</div>
+          <div>
+            <strong>${it.lbl}</strong> — ${
+              it.status==='ready'?'Complete — maintain through closing.':
+              it.status==='prog'?'In progress — continue on schedule.':
+              'Action required — prioritize this area.'}
+            ${it.hardDep?` <span class="hd-tag">⚑ HARD DEADLINE${tdd?` — TRUST MUST BE FORMED BY ${tdd}`:' — COMPLETE BEFORE VAL'}</span>`:''}
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── CHECKINS ───────────────────────────────────────────────────────────────
+function checkins(sc,tl){
+  const t=parseInt(tl)||6;
+  return [
+    {w:'Check-In 1',t:t<=3?'Week 2':'30 Days',f:'Foundation Review',
+     d:'Confirm credit and documentation tasks are underway. Review early wins and any roadblocks.'},
+    {w:'Check-In 2',t:t<=3?'Week 4':'60 Days',f:'Momentum Check',
+     d:'Score progress review. Savings trajectory on target. Debt paydown update. Trust timeline if applicable.'},
+    {w:'Check-In 3',t:t<=3?'Week 6':'90 Days / Pre-VAL',f:'VAL Readiness Review',
+     d:'Full readiness assessment. If score 85%+ — initiate VAL process. If not — identify remaining gaps and reset timeline.'},
+  ];
+}
+
+// ── READY CONDITIONS ───────────────────────────────────────────────────────
+function readyConds(trust,emp){
+  return [
+    'Credit score optimized — no new accounts, no major purchases before closing',
+    'All income documentation complete, current, and organized',
+    'DTI within acceptable range for chosen loan product',
+    'Down payment and closing cost reserves fully sourced, seasoned, and documented',
+    'Purchase scenario confirmed — life alignment verified and protecting FIN#',
+    trust?'Living trust formed and documented — loan product confirmed trust-eligible':'Title vesting structure confirmed with advisor and escrow',
+    'Verified Approval submitted and issued by underwriting',
+    'Realtor partner engaged and briefed on VAL status',
+    emp==='self'||emp==='self1'?'Business returns and YTD P&L prepared and verified':'Employment verification and documentation package complete',
+  ];
+}
+
+// ── MAIN GENERATOR ─────────────────────────────────────────────────────────
+function gen(){
+  const fname=document.getElementById('fn').value||'Buyer';
+  const lname=document.getElementById('ln').value||'';
+  const name=(fname+' '+lname).trim();
+  const advisor=document.getElementById('adv').value||'Your Advisor';
+  const emp=document.getElementById('emp').value;
+  const dti=document.getElementById('dti').value;
+  const cs=document.getElementById('cs').value;
+  const trust=document.getElementById('trust').checked;
+  const hasWin=document.getElementById('win').checked;
+  const cdate=document.getElementById('cdate').value;
+  const tlEst=document.getElementById('tl-est').value;
+  const ctx=document.getElementById('ctx').value;
+  const scen=document.getElementById('scen').value;
+  const prange=document.getElementById('prange').value;
+  const dpTgt=parseFloat(document.getElementById('dp-tgt').value)||0;
+  const dpCur=parseFloat(document.getElementById('dp-cur').value)||0;
+  const dpMo=parseFloat(document.getElementById('dp-mo').value)||0;
+  const dpCC=parseFloat(document.getElementById('dp-cc').value)||0;
+
+  const sc=score(); const t=tier(sc);
+  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  const fmt=n=>'$'+Math.round(n).toLocaleString();
+
+  // Savings gap
+  const totalNeed=dpTgt+dpCC;
+  const gap=Math.max(totalNeed-dpCur,0);
+  const moToReady=dpMo>0?Math.ceil(gap/dpMo):null;
+
+  // VAL snap pills
+  const pills=CATS.map(c=>{
+    const s=ST[c]||'needs';
+    const cls=s==='ready'?'ok':s==='prog'?'wa':'no';
+    return `<span class="vp-pill ${cls}">${CM[c].label.split(' ')[0]}</span>`;
+  }).join('');
+
+  // Snap bar
+  const snapBar=CATS.map(c=>{
+    const s=ST[c]||'needs';
+    const bg=s==='ready'?'rgba(22,101,52,.4)':s==='prog'?'rgba(180,83,9,.4)':'rgba(185,28,28,.3)';
+    return `<div class="sb-cell" style="background:${bg}"><div class="sbl">${CM[c].label.split(' ')[0]}</div><div class="sbv">${s==='ready'?'Ready':s==='prog'?'In Prog':'Needs Work'}</div></div>`;
+  }).join('');
+
+  // Category cards
+  const cards=CATS.map((c,i)=>{
+    const s=ST[c]||'needs'; const col=scol(s); const pct=spct(s);
+    const note=document.getElementById('cn-'+c)?.value||'';
+    const tks=tasks(c,s,emp,dti,cs,trust);
+    const isOwn=c==='ownership'; const isAss=c==='assets';
+    const fw=(i===CATS.length-1&&CATS.length%2!==0)?'cc fw':'cc';
+
+    let extra='';
+    if(isAss&&dpTgt>0&&gap>0){
+      extra=`<div class="sgap"><i class="ti ti-alert-circle"></i><div>Savings gap: <strong>${fmt(gap)}</strong>${moToReady?` — ${moToReady} months at ${fmt(dpMo)}/mo`:''}. Total needed: ${fmt(totalNeed)}.</div></div>`;
+    }
+    if(isOwn&&trust&&s!=='ready'){
+      const tdd=hasWin&&cdate?trustDeadlineDate(cdate):null;
+      extra=`<div class="dep"><i class="ti ti-flag-filled"></i><div><div class="dt">HARD DEADLINE — MUST COMPLETE BEFORE VAL SUBMISSION</div><div class="db">${tdd?`Trust must be formed by <strong>${tdd}</strong> — the minimum 8 weeks before your closing date.`:'Trust formation requires at minimum 8 weeks before your closing date.'} This is the one task on this map with a non-negotiable deadline. Speak with your advisor about the estate planning partner introduction today.</div></div></div>`;
+    }
+
+    return `<div class="${fw}">
+      <div class="cc-top">
+        <div class="cc-name"><i class="ti ${CM[c].icon}"></i>${CM[c].label}</div>
+        ${sbdg(s)}
+      </div>
+      <div class="rr2">
+        ${ringM(pct,col)}
+        <div style="font-size:10px;color:var(--muted);line-height:1.45">${
+          s==='ready'?'Conditions confirmed. Maintain through closing.':
+          s==='prog'?'Work is underway. Stay the course.':
+          'This area needs attention before VAL can be submitted.'
+        }</div>
+      </div>
+      <ul class="tl">
+        ${tks.map(tk=>`<li>${sicon(s)}<span>${tk}</span></li>`).join('')}
+      </ul>
+      ${condBlock(c)}
+      ${note?`<div class="cn">Advisor note: ${note}</div>`:''}
+      ${extra}
+    </div>`;
+  }).join('');
+
+  // Phase timeline
+  const phHtml=phases(trust,hasWin?cdate:null,tlEst,dti);
+  // Checkins
+  const cks=checkins(sc,tlEst);
+  const ckHtml=cks.map(k=>`<div class="ck"><div class="cw">${k.w} · ${k.t}</div><div class="cf">${k.f}</div><div class="cd">${k.d}</div></div>`).join('');
+  // Ready conditions
+  const rc=readyConds(trust,emp);
+
+  document.getElementById('rpt').innerHTML=`
+  <div class="rh">
+    <div class="rh-lbl">Life-Aligned Home Buying System™ — Buyer Readiness Map</div>
+    <h1>Your Path to <strong>VAL Ready</strong></h1>
+    <div class="rh-meta">Prepared for ${name} &nbsp;·&nbsp; ${today} &nbsp;·&nbsp; Advisor: ${advisor}${hasWin&&cdate?` &nbsp;·&nbsp; Target closing: ${new Date(cdate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`:`&nbsp;·&nbsp; Timeline: ${tlEst} months`}${prange?` &nbsp;·&nbsp; ${prange}`:''}</div>
+    <div class="vh">
+      <div class="vring">${ringH(sc,t.col)}<div class="vc"><div class="vn">${sc}</div><div class="vp">% Ready</div></div></div>
+      <div>
+        <div class="vl">${t.lbl}</div>
+        <div class="vd">${t.desc}</div>
+        <div class="vpills">${pills}</div>
+      </div>
+    </div>
+    <div class="snap-bar" style="margin-top:10px">${snapBar}</div>
+  </div>
+  <div class="rb2">
+    <div class="rs">
+      <div class="rs-tag">Readiness Profile</div>
+      <div class="rs-title">Where You Stand Today${scen&&scen!==''?` &nbsp;·&nbsp; <span style="font-size:12px;font-weight:400;color:var(--muted)">Scenario ${scen} selected</span>`:''}
+      </div>
+      <div class="cg">${cards}</div>
+    </div>
+    <div class="rs">
+      <div class="rs-tag">Your Action Plan</div>
+      <div class="rs-title">The Path Forward${hasWin&&cdate?' — Mapped to Your Closing Window':''}</div>
+      <div class="tln">${phHtml}</div>
+    </div>
+    <div class="rs">
+      <div class="rs-tag">Coaching Schedule</div>
+      <div class="rs-title">Your Check-In Plan</div>
+      <div class="ckg">${ckHtml}</div>
+    </div>
+    <div class="rs">
+      <div class="rs-tag">The Finish Line</div>
+      <div class="rs-title">What VAL Ready Looks Like for You</div>
+      <div class="rb3">
+        <div class="rt">Every one of these must be confirmed before we submit your Verified Approval</div>
+        <ul>${rc.map(r=>`<li><i class="ti ti-circle-check"></i><span>${r}</span></li>`).join('')}</ul>
+      </div>
+    </div>
+    <div class="rf">This Readiness Map reflects your current position based on information gathered in your advisory sessions. Your score and milestones will be updated at each check-in. <strong>No client data is stored or transmitted — save your PDF now.</strong></div>
+    <div class="rft">Life-Aligned Home Buying System™ &nbsp;·&nbsp; Buyer Readiness Map &nbsp;·&nbsp; ${name} &nbsp;·&nbsp; ${today}</div>
+  </div>`;
+
+  // ── ADVISOR SUMMARY ────────────────────────────────────────────────────────
+  const critPath=CATS.filter(c=>(ST[c]||'needs')!=='ready')
+    .sort((a,b)=>W[b]-W[a]).slice(0,4);
+  const readyCnt=CATS.filter(c=>ST[c]==='ready').length;
+
+  // Doc checklist summary
+  const docItems=[
+    ['doc-t2','2yr Tax Returns'],['doc-w2','W-2s'],['doc-ps','Pay Stubs'],
+    ['doc-bs','Bank Statements'],['doc-bt','Business Returns'],['doc-pl','P&L Statement'],
+    ['doc-ss','SS/Pension Income'],
+  ];
+  const docStatus=docItems.map(([id,lbl])=>{
+    const checked=document.getElementById(id)?.checked;
+    return `<span style="font-size:10px;padding:2px 7px;border-radius:8px;margin-right:4px;margin-bottom:4px;display:inline-block;background:${checked?'rgba(22,101,52,.1)':'rgba(185,28,28,.1)'};color:${checked?'#166534':'#b91c1c'}">${checked?'✓':'+'}  ${lbl}</span>`;
+  }).join('');
+
+  document.getElementById('advr').innerHTML=`
+  <div class="adv-h">
+    <h2>Advisor Summary — ${name}</h2>
+    <div class="at">Internal Use Only — Do Not Print With Client Map</div>
+  </div>
+  <div class="adv-b">
+    <div class="adv-g">
+      <div class="adc"><div class="al">VAL Readiness Score</div><div class="av">${sc}%</div><div class="as2">${t.lbl}</div></div>
+      <div class="adc"><div class="al">Categories Ready</div><div class="av">${readyCnt} of 7</div><div class="as2">${CATS.filter(c=>ST[c]==='prog').length} in progress</div></div>
+      <div class="adc"><div class="al">Highest-Weight Gap</div><div class="av">${critPath.length>0?CM[critPath[0]].label.split(' ')[0]:'None'}</div><div class="as2">${critPath.length>0?W[critPath[0]]+' pts remaining':''}</div></div>
+    </div>
+    ${trust?`<div class="adv-sec">
+      <div class="adv-st">⚑ Trust Formation — Hard Deadline Active</div>
+      <div class="ai"><span class="ap hi">URGENT</span><div><strong>Estate planning partner introduction must happen at this session.</strong> Trust formation minimum: 8 weeks before closing.${hasWin&&cdate?` Trust must be formed by <strong>${trustDeadlineDate(cdate)}</strong>.`:''} Confirm loan product trust-eligible before VAL submission. Buyer cannot be VAL Ready until trust is formed if vesting in trust.</div></div>
+    </div>`:''}
+    <div class="adv-sec">
+      <div class="adv-st">Critical Path — Address in This Order</div>
+      ${critPath.map(c=>`<div class="ai">
+        <span class="ap ${W[c]>=17?'hi':W[c]>=14?'mi':'li'}">${W[c]>=17?'HIGH':W[c]>=14?'MED':'LOW'}</span>
+        <div><strong>${CM[c].label}</strong> — ${ST[c]==='prog'?'In progress, monitor closely.':'Needs work. This gap is blocking VAL readiness.'} Score weight: ${W[c]} pts.</div>
+      </div>`).join('')}
+    </div>
+    <div class="adv-sec">
+      <div class="adv-st">Documentation Status</div>
+      <div style="margin-top:4px">${docStatus}</div>
+    </div>
+    <div class="adv-sec">
+      <div class="adv-st">Next Session Agenda</div>
+      <div class="ai"><span class="ap mi">OPEN</span><div><strong>Score review</strong> — walk the score together. Acknowledge progress, however small. Momentum matters.</div></div>
+      <div class="ai"><span class="ap mi">OPEN</span><div><strong>Critical path update</strong> — status of the ${critPath.length} highest-weight categories above.</div></div>
+      ${trust&&ST.ownership!=='ready'?`<div class="ai"><span class="ap hi">URGENT</span><div><strong>Trust formation status</strong> — confirm estate planning partner was contacted. Get a completion timeline.</div></div>`:''}
+      <div class="ai"><span class="ap ${sc>=85?'li':'mi'}">${sc>=85?'ACT':'OPEN'}</span><div><strong>VAL readiness check</strong> — ${sc>=85?'Score is 85%+. Initiate VAL submission conversation today.':'Score below 85%. Identify the two tasks that would move the score most and focus there.'}</div></div>
+    </div>
+    ${ctx?`<div class="adv-sec"><div class="adv-st">Advisor Context Notes</div><div class="ai"><div>${ctx}</div></div></div>`:''}
+    <div class="adv-sec">
+      <div class="adv-st">Buyer Details</div>
+      <div class="ai"><div><strong>Employment:</strong> ${emp||'Not specified'} &nbsp;·&nbsp; <strong>DTI:</strong> ${dti||'Not specified'} &nbsp;·&nbsp; <strong>Credit range:</strong> ${cs||'Not specified'} &nbsp;·&nbsp; <strong>Scenario:</strong> ${scen||'Not selected'}</div></div>
+      ${dpTgt>0?`<div class="ai"><div><strong>Down payment target:</strong> ${fmt(dpTgt)} &nbsp;·&nbsp; <strong>Current savings:</strong> ${fmt(dpCur)} &nbsp;·&nbsp; <strong>Gap:</strong> ${fmt(gap)}${moToReady?` (${moToReady} months at ${fmt(dpMo)}/mo)`:''}</div></div>`:''}
+    </div>
+  </div>
+  <div class="adv-ft">Advisor use only · ${name} · ${today} · No data stored or transmitted</div>`;
+
+  // Show output
+  for(let i=1;i<=4;i++) document.getElementById('s'+i).classList.remove('on');
+  document.getElementById('prog').style.display='none';
+  document.getElementById('rep-area').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── PRINT CONTROLS ─────────────────────────────────────────────────────────
+function printClient(){
+  document.getElementById('adv-area').style.display='none';
+  document.body.classList.remove('print-adv');
+  window.print();
+}
+function printAdv(){
+  document.body.classList.add('print-adv');
+  window.print();
+  setTimeout(()=>document.body.classList.remove('print-adv'),1000);
+}
+function showAdv(){
+  const a=document.getElementById('adv-area');
+  a.style.display=a.style.display==='none'?'block':'none';
+  if(a.style.display==='block') a.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function startOver(){
+  document.getElementById('rep-area').style.display='none';
+  document.getElementById('adv-area').style.display='none';
+  document.getElementById('prog').style.display='flex';
+  CATS.forEach(c=>delete ST[c]);
+  cur=1; document.getElementById('s1').classList.add('on');
+  updateP(); window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
